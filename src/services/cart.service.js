@@ -97,7 +97,31 @@ class CartService {
         const updatedCart = await CartRepository.updateProductQuantity(cartId, cart);
         return updatedCart;
     }
-    
+    async updateCart(cartId, newProducts) {
+        const cart = await CartRepository.getById(cartId);
+        if (!cart) {
+            throw new Error('Carrito no encontrado.');
+        }
+
+        for (const newProduct of newProducts) {
+            const product = await ProductRepository.getById(newProduct.productId);
+            if (!product) {
+                throw new Error(`Producto con ID ${newProduct.productId} no encontrado.`);
+            }
+
+            if (newProduct.quantity > product.stock) {
+                throw new Error(`Stock insuficiente para el producto ${product.name}.`);
+            }
+        }
+
+        const updatedProducts = newProducts.map(p => ({
+            product: p.product._id,
+            quantity: p.quantity
+        }));
+
+        const updatedCart = await CartRepository.updateCart(cartId, updatedProducts);
+        return updatedCart;
+    }
 }
 
 export default new CartService();

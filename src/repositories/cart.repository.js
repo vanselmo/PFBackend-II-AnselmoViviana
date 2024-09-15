@@ -24,12 +24,12 @@ class CartRepository {
             cart.products.push({ product: productId, quantity });
         }
 
-        return await CartDao.update(cartId, cart);  
+        return await CartDao.update(cartId, cart);
     }
 
     async addProduct(cartId, productId, quantity) {
         const cart = await getById(cartId);
-        const productIndex = cart.products.findIndex(p => p.product._id.toString()  === productId);
+        const productIndex = cart.products.findIndex(p => p.product._id.toString() === productId);
 
         if (productIndex !== -1) {
             cart.products[productIndex].quantity += quantity;
@@ -51,8 +51,14 @@ class CartRepository {
         return await CartDao.update(cartId, cart);
     }
     async updateProductQuantity(cartId, updatedCart) {
-        return await CartDao.update(cartId, updatedCart); 
+        return await CartDao.update(cartId, updatedCart);
     }
+    async updateCart(cartId, newProducts) {
+        const updatedCart = await CartDao.updateCart(cartId, newProducts);
+        return updatedCart;
+    }
+
+
 }
 
 export default new CartRepository();

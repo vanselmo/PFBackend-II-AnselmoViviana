@@ -5,7 +5,7 @@ import ProductManager from './dao/mongodb/product.manager.db.js';
 import productsRouter from './routes/productRoutes.js';
 import cartsRouter from './routes/cartRoutes.js';
 import viewsRoutes from './routes/viewsRoutes.js';
-import sessionRoutes from './routes/sessionRoutes.js';
+import sessionRouter from './routes/sessionRoutes.js';
 import "./database.js";
 import passport from 'passport';
 import initalizePassport from './config/passport.config.js';
@@ -27,8 +27,8 @@ app.set('views', './src/views');
 
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use("/api/sessions", sessionRouter);
 app.use("/", viewsRoutes);
-app.use("/api/sessions", sessionRoutes);
 
 const httpServer = app.listen(PORT, () => {
     console.log("Servidor escuchando en el puerto " + PORT);
@@ -45,11 +45,12 @@ io.on('connection', async (socket) => {
 
     socket.on("deleteProducts", async (id) => {
         await productManager.deleteProduct(id);
-        io.sockets.emit("products", await productManager.getProducts());
+        const updatedProducts = await productManager.getProducts(); 
+        io.sockets.emit("products", updatedProducts.docs); 
     });
-
     socket.on("newProduct", async (product) => {
         await productManager.addProduct(product);
-        io.sockets.emit("products", await productManager.getProducts());
+        const updatedProducts = await productManager.getProducts();
+        io.sockets.emit("products", updatedProducts.docs); 
     });
 });

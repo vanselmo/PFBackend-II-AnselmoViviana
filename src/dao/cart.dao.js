@@ -35,6 +35,13 @@ class CartDao {
     async update(cartId, updatedCart) {
         return await CartModel.findByIdAndUpdate(cartId, updatedCart, { new: true }).populate('products.product');
     }
+    async updateCart(cartId, newProducts) {
+        return await CartModel.findByIdAndUpdate(
+            cartId,
+            { products: newProducts },
+            { new: true }
+        ).populate('products.product'); 
+    }
 
     async updateProductQuantity(cartId, productId, quantity) {
         return await CartModel.updateOne(

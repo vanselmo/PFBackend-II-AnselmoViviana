@@ -1,8 +1,12 @@
 import ProductRepository from '../repositories/product.repository.js';
 
 class ProductService {
-    async getAllProducts(filter = {}) {
-        return await ProductRepository.getAll(filter);
+    async getProducts({ limit = 10, page = 1, sort, query } = {}) {
+        try {
+            return await ProductRepository.getProducts({ limit, page, sort, query });
+        } catch (error) {
+            throw new Error('Error en el servicio de productos: ' + error.message);
+        }
     }
 
     async getProductById(productId) {

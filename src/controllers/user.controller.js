@@ -70,7 +70,7 @@ class UserController {
 
     logout(req, res) {
         res.clearCookie("coderCookieToken");
-        res.status(200).json({ message: "Logout exitoso" });   
+        res.redirect("/login");
     }
 }
 

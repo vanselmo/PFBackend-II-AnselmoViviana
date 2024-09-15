@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import passport from 'passport';
-import userController from '../controllers/user.controller.js';
+import UserController from '../controllers/user.controller.js';
 
 const router = Router();
 
-router.post("/register", userController.register);
-router.post("/login", userController.login);
-router.get("/current", passport.authenticate('jwt', { session: false }), userController.current);
-router.post("/logout", userController.logout);
+router.post("/register", UserController.register);
+router.post("/login", UserController.login);
+router.get("/current", passport.authenticate('jwt', { session: false }), UserController.current);
+router.post('/logout', UserController.logout);
 
 export default router;

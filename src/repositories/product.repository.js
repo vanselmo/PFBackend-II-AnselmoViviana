@@ -1,8 +1,12 @@
 import ProductDAO from '../dao/product.dao.js';
 
 class ProductRepository {
-    async getAll(filter = {}) {
-        return await ProductDAO.getAll(filter);
+    async getProducts({ limit = 10, page = 1, sort, query } = {}) {
+        try {
+            return await ProductDAO.getProducts({ limit, page, sort, query });
+        } catch (error) {
+            throw new Error('Error en el repositorio de productos: ' + error.message);
+        }
     }
 
     async getById(productId) {
