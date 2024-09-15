@@ -39,7 +39,7 @@ class CartRepository {
         return await CartDao.update(cartId, cart);
     }
 
-    async removeProduct(cartId, productId) {
+    async removeProductFromCart(cartId, productId) {
         const cart = await this.getById(cartId);
         cart.products = cart.products.filter(p => p.product._id.toString() !== productId);
 
@@ -49,6 +49,9 @@ class CartRepository {
         const cart = await this.getById(cartId);
         cart.products = [];
         return await CartDao.update(cartId, cart);
+    }
+    async updateProductQuantity(cartId, updatedCart) {
+        return await CartDao.update(cartId, updatedCart); 
     }
 }
 

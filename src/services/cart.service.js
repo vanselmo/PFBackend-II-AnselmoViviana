@@ -5,6 +5,10 @@ import UserRepository from "../repositories/user.repository.js";
 
 class CartService {
 
+    async createCart() {
+        return await CartRepository.createcart();
+    }
+
     async getAllCarts() {
         return await CartRepository.getAll();
     }
@@ -36,8 +40,8 @@ class CartService {
             throw new Error("Error al agregar el producto al carrito.");
         }
     }
-    async removeProduct(cartId, productId) {
-        const updatedCart = await CartRepository.removeProduct(cartId, productId);
+    async removeProductFromCart(cartId, productId) {
+        const updatedCart = await CartRepository.removeProductFromCart(cartId, productId);
         return updatedCart;
     }
 
@@ -67,6 +71,31 @@ class CartService {
         const ticket = await TicketService.generateTicket(cart, userEmail);
         await this.clearCart(cartId);
         return ticket;
+    }
+
+    async updateProductQuantity(cartId, productId, newQuantity) {
+        const cart = await CartRepository.getById(cartId);
+        if (!cart) {
+            throw new Error('Carrito no encontrado.');
+        }
+        const product = await ProductRepository.getById(productId);
+        if (!product) {
+            throw new Error('Producto no encontrado.');
+        }
+
+        if (newQuantity > product.stock) {
+            throw new Error(`Stock insuficiente para el producto ${product.name}.`);
+        }
+
+        const productIndex = cart.products.findIndex(p => p.product._id.toString() === productId);
+        if (productIndex === -1) {
+            throw new Error('Producto no encontrado en el carrito.');
+        }
+
+        cart.products[productIndex].quantity = newQuantity;
+
+        const updatedCart = await CartRepository.updateProductQuantity(cartId, cart);
+        return updatedCart;
     }
     
 }

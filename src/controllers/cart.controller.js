@@ -6,6 +6,7 @@ class CartController {
             const newCart = await CartService.createCart();
             res.status(201).json(newCart);
         } catch (error) {
+            console.error(error);
             res.status(500).json({ error: "Error interno del servidor" });
         }
     }
@@ -53,6 +54,7 @@ class CartController {
             await CartService.removeProductFromCart(cartId, productId);
             res.json({ message: "El producto ha sido eliminado del carrito" });
         } catch (error) {
+            console.error(error);
             res.status(400).json({ error: "Error: no se pudo eliminar el producto del carrito" });
         }
     }
